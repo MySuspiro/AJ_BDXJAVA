@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 
+import com.sun.corba.se.impl.ior.iiop.JavaSerializationComponent;
 import com.sun.org.apache.bcel.internal.generic.LoadClass;
 import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
 
@@ -23,6 +24,7 @@ import logico.Historial;
 import logico.Paciente;
 import logico.Persona;
 import logico.Vacuna;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -122,7 +124,7 @@ public class RegConsulta2 extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				pac = null;
 				try {
-					pac = (Paciente)Clinica.getInstance().buscarPersonaByCedula(txtCedPaciente.getText());
+					pac = JavaConnect2SQL.getInstace().buscarPacienteByCedula(txtCedPaciente.getText());
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}
@@ -297,7 +299,7 @@ public class RegConsulta2 extends JDialog {
 		cmbDoc.setBounds(292, 50, 196, 22);
 		panel_2.add(cmbDoc);
 		cmbDoc.addItem("<Seleccione>");
-		for (Persona aux : Clinica.getInstance().getMisPersonas()) {
+		for (Doctor aux : JavaConnect2SQL.getInstace().getMisDoctor("")) {
 			if(aux != null) {
 				if(aux instanceof Doctor) {
 					cmbDoc.addItem(aux.getNombre());
@@ -331,7 +333,7 @@ public class RegConsulta2 extends JDialog {
 		cmbVac.setBounds(18, 27, 196, 22);
 		panelVac.add(cmbVac);
 		cmbVac.addItem("<Selected>");
-		for (Vacuna aux : Clinica.getInstance().getMisVacunas()) {
+		for (Vacuna aux : JavaConnect2SQL.getInstace().getMisVacunas("")) {
 			if(aux != null) {
 				cmbVac.addItem(aux.getNombre());
 			}	
@@ -351,7 +353,7 @@ public class RegConsulta2 extends JDialog {
 				cmbEnf.removeAllItems();
 				cmbVac.setSelectedIndex(0);
 				cmbEnf.addItem("<Selected>");
-				for (Enfermedad aux : Clinica.getInstance().getMisEnfermedades()) {
+				for (Enfermedad aux : JavaConnect2SQL.getInstace().getMisEnfermedades("")) {
 					if(aux != null) {
 						cmbEnf.addItem(aux.getNombre());
 					}	
@@ -368,7 +370,7 @@ public class RegConsulta2 extends JDialog {
 				rdbSano.setVisible(false);
 				rdbEnf.setVisible(false);
 				PanEnf.setVisible(true);
-				pac = (Paciente)Clinica.getInstance().buscarPersonaByCedula(txtCedPaciente.getText());
+				pac = JavaConnect2SQL.getInstace().buscarPacienteByCedula(txtCedPaciente.getText());
 				cmbEnf.removeAllItems();
 				cmbVac.setSelectedIndex(0);
 				cmbEnf.addItem("<Selected>");
@@ -473,12 +475,12 @@ public class RegConsulta2 extends JDialog {
 		
 	}
 	private Paciente searchOrCreatePatient(String cedula) {
-	    Paciente paciente = (Paciente) Clinica.getInstance().buscarPersonaByCedula(cedula);
+	    Paciente paciente = JavaConnect2SQL.getInstace().buscarPacienteByCedula(cedula);
 
 	    if (paciente == null) {
 	        char sex = rdbHombre.isSelected() ? 'H' : 'M';
-	        paciente = new Paciente(cedula, txtNom.getText(), txtDir.getText(), "P-" + Clinica.getInstance().getcodPers(), txtTel.getText(), sex, txtEmail.getText(), txtSeguro.getText(), (int)spnPes.getValue(), (int)spnAlt.getValue(), cmbSangre.getSelectedItem().toString());
-	        Clinica.getInstance().agregarPersona(paciente);
+	        paciente = new Paciente(cedula, txtNom.getText(), txtDir.getText(), "P-" + Clinica.getInstance().getcodPac(), txtTel.getText(), sex, txtEmail.getText(), txtSeguro.getText(), (int)spnPes.getValue(), (int)spnAlt.getValue(), cmbSangre.getSelectedItem().toString());
+	        JavaConnect2SQL.getInstace().agregarPaciente(paciente);
 	    }
 
 	    return paciente;
@@ -494,22 +496,22 @@ public class RegConsulta2 extends JDialog {
 	    paciente.setAltura((int)spnAlt.getValue());
 		paciente.setPeso((int)spnPes.getValue());
 		paciente.setTipoSangre(cmbSangre.getSelectedItem().toString());
-	    Clinica.getInstance().modificarPersona(paciente);
+		JavaConnect2SQL.getInstace().updatePaciente(paciente);
 	}
 
 
 	private void registerConsulta(Paciente paciente) {
 	    Doctor doctor = null;
-	    doctor = (Doctor)Clinica.getInstance().buscarPersonaByNom(cmbDoc.getSelectedItem().toString());
+	    doctor = JavaConnect2SQL.getInstace().buscarDoctorByNom(cmbDoc.getSelectedItem().toString());
 	    Enfermedad enfermedad = null;
 	    Vacuna vacuna = null;
 	    if(encontrado || !verificarCedulaRepetida(txtCedPaciente.getText()) && doctor != null) {
 	    	if (rdbEnf.isSelected() || rdbSano.isSelected()) {
-		        enfermedad = Clinica.getInstance().buscarEnfermedadByNom(cmbEnf.getSelectedItem().toString());
+		        enfermedad = JavaConnect2SQL.getInstace().buscarEnfermedadByNom(cmbEnf.getSelectedItem().toString());
 		    }
 
 		    if (rdbVacuna.isSelected()) {
-		        vacuna = Clinica.getInstance().buscarVacunaByNom(cmbVac.getSelectedItem().toString());
+		        vacuna = JavaConnect2SQL.getInstace().buscarVacunaByNom(cmbVac.getSelectedItem().toString());
 		        paciente.getHist().addMisVacunas(vacuna);
 		    }
 
@@ -533,7 +535,7 @@ public class RegConsulta2 extends JDialog {
 		    }
 
 	        updatePatient(paciente);
-		    Clinica.getInstance().agregarConsulta(consulta);
+		    JavaConnect2SQL.getInstace().agregarConsulta(consulta);
 
 		    JOptionPane.showMessageDialog(null, "Consulta Registrada Exitosamente", "Consulta", JOptionPane.INFORMATION_MESSAGE);
 
@@ -586,7 +588,7 @@ public class RegConsulta2 extends JDialog {
 	}
 	
 	public boolean verificarCedulaRepetida(String cedula) {
-	    for (Persona persona : Clinica.getInstance().getMisPersonas()) {
+	    for (Paciente persona : JavaConnect2SQL.getInstace().getMisPacientes("")) {
 	        if (persona.getCedula().equals(txtCedPaciente.getText())) {
 	        	return true;
 	        }else {

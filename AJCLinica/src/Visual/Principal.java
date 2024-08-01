@@ -22,12 +22,15 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
+import com.sun.xml.internal.ws.api.databinding.ClientCallBridge;
+
 import javafx.scene.chart.NumberAxis;
 import logico.Clinica;
 import logico.Doctor;
 import logico.Enfermedad;
 import logico.Persona;
 import logico.Vacuna;
+import net.code.java.sql.JavaConnect2SQL;
 
 import java.awt.FlowLayout;
 import javax.swing.border.SoftBevelBorder;
@@ -102,7 +105,7 @@ public class Principal extends JFrame {
 	 */
 	public Principal() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("hospital.png"));
-		addWindowListener(new WindowAdapter() {
+		/*addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 
@@ -122,7 +125,7 @@ public class Principal extends JFrame {
 				}
 
 			}
-		});
+		});*/
 		setResizable(false);
 		setTitle("Cl\u00EDnica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -194,7 +197,7 @@ public class Principal extends JFrame {
 		mntmNewMenuItem_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(Clinica.getLoginUser().getTipo().equalsIgnoreCase("Doctor") ){
-					Doctor doc = Clinica.getInstance().buscarDoctorByUser(Clinica.getLoginUser().getPersona().getCodigo());
+					Doctor doc = JavaConnect2SQL.getInstace().buscarDoctorByCodigo(Clinica.getLoginUser().getPersona().getCodigo());
 					RegConsulta2 regConsul= new RegConsulta2();
 					regConsul.setModal(true);
 					regConsul.setVisible(true);
@@ -211,7 +214,7 @@ public class Principal extends JFrame {
 		mntmNewMenuItem_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(Clinica.getLoginUser().getTipo().equalsIgnoreCase("Doctor") ){
-					Doctor doc=Clinica.getInstance().buscarDoctorByUser(Clinica.getLoginUser().getPersona().getCodigo());
+					Doctor doc = JavaConnect2SQL.getInstace().buscarDoctorByCodigo(Clinica.getLoginUser().getPersona().getCodigo());
 					ListarConsulta2 as= new ListarConsulta2(doc);
 					as.setModal(true);
 					as.setVisible(true);
@@ -271,7 +274,7 @@ public class Principal extends JFrame {
 		mntmNewMenuItem_7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(Clinica.getLoginUser().getTipo().equalsIgnoreCase("Doctor") ){
-					Doctor doc=Clinica.getInstance().buscarDoctorByUser(Clinica.getLoginUser().getPersona().getCodigo());
+					Doctor doc = JavaConnect2SQL.getInstace().buscarDoctorByCodigo(Clinica.getLoginUser().getPersona().getCodigo());
 					AgendaSemanal2 as= new AgendaSemanal2(doc);
 					as.setModal(true);
 					as.setVisible(true);
@@ -451,6 +454,7 @@ public class Principal extends JFrame {
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//probando el socket
+				/*
 				try {
 					sfd = new Socket("localhost", 7007);
 					EntradaSocket = new DataInputStream(new BufferedInputStream(sfd.getInputStream()));
@@ -483,7 +487,8 @@ public class Principal extends JFrame {
 					} catch (IOException eo) {
 						eo.printStackTrace();
 					}
-				}}
+				}*/
+				}
 			//
 		});
 		mnAdministracion.add(mntmNewMenuItem_2);
@@ -514,7 +519,7 @@ public class Principal extends JFrame {
 	public void initVac() {
 	    // Fuente de Datos
 	    datasetVac = new DefaultCategoryDataset();
-	    for (Vacuna aux : Clinica.getInstance().getMisVacunas()) {
+	    for (Vacuna aux : JavaConnect2SQL.getInstace().getMisVacunas("")) {
 	    	datasetVac.setValue((int)Clinica.getInstance().vacunaCantPacientes(aux), aux.getEnf().getNombre(), aux.getNombre());
 	    }
 

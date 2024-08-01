@@ -12,11 +12,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.sun.javafx.scene.control.SelectedCellsMap;
+
 import logico.Clinica;
 import logico.Consulta;
 import logico.Doctor;
 import logico.Paciente;
 import logico.Persona;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -87,7 +90,7 @@ public class ListarPaciente extends JDialog {
 								btnEliminar.setEnabled(true);
 							}
 							btnUpdate.setEnabled(true);
-							selected = (Paciente) Clinica.getInstance().buscarPersonaByCodigo(table.getValueAt(index,0).toString());
+							selected = JavaConnect2SQL.getInstace().buscarPacienteByCodigo(table.getValueAt(index,0).toString());
 							
 						}
 					}
@@ -151,7 +154,7 @@ public class ListarPaciente extends JDialog {
 							int option = JOptionPane.showConfirmDialog(null, "Está seguro(a) que desea eliminar el Paciente con código: "+ selected.getCodigo(), "Confirmación", JOptionPane.OK_CANCEL_OPTION);
 							if (option== JOptionPane.OK_OPTION && verificarPaciente()==true  ) {
 
-									Clinica.getInstance().eliminarPersona(selected);
+									JavaConnect2SQL.getInstace().deleteWithString("Paciente", "Codigo", selected.getCodigo());
 									btnEliminar.setEnabled(false);
 									btnUpdate.setEnabled(false);
 									loadPacientes();
@@ -185,23 +188,20 @@ public class ListarPaciente extends JDialog {
 		modelo.setRowCount(0);
 		row= new Object[table.getColumnCount()];
 		
-		for (Persona persona: Clinica.getInstance().getMisPersonas()) {
-			if(persona instanceof Paciente)
-			{
-				row[0]=persona.getCodigo();
-				row[1]=persona.getNombre();
-				row[2]=persona.getTelefono();
-				row[3]=persona.getCedula();
-				modelo.addRow(row);	
-				
-			}
+		for (Paciente persona: JavaConnect2SQL.getInstace().getMisPacientes("")) {
+			row[0]=persona.getCodigo();
+			row[1]=persona.getNombre();
+			row[2]=persona.getTelefono();
+			row[3]=persona.getCedula();
+			modelo.addRow(row);	
+			
 		}	
 		
 	}
 	
 	public boolean verificarPaciente()
 	{
-		for (Consulta consulta: Clinica.getInstance().getMisConsultas()) {
+		for (Consulta consulta: JavaConnect2SQL.getInstace().getMisConsultas("")) {
 			if (selected.equals(consulta.getPaciente()))
 			{
 				return false;

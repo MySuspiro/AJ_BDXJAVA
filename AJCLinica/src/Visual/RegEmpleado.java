@@ -14,6 +14,7 @@ import logico.Doctor;
 import logico.Empleado;
 import logico.Persona;
 import logico.User;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -205,7 +206,7 @@ public class RegEmpleado extends JDialog {
 					txtCodigo.setBounds(30, 46, 267, 22);
 					panel_1.add(txtCodigo);
 					txtCodigo.setEditable(false);
-					txtCodigo.setText("E-"+Clinica.getInstance().getcodPers());
+					txtCodigo.setText("E-"+Clinica.getInstance().getcodEmp());
 					txtCodigo.setColumns(10);
 				}
 				{
@@ -309,12 +310,11 @@ public class RegEmpleado extends JDialog {
 									sexo='M';
 									}
 									
-									Persona persona = new Empleado(txtCedula.getText(),txtNombre.getText(),txtDireccion.getText(),txtCodigo.getText(),txtTelefono.getText(),sexo,txtCorreoE.getText(),txtPuestoLaboral.getText());
-									Clinica.getInstance().agregarPersona(persona);
-									
-				
+									Empleado persona = new Empleado(txtCedula.getText(),txtNombre.getText(),txtDireccion.getText(),txtCodigo.getText(),txtTelefono.getText(),sexo,txtCorreoE.getText(),txtPuestoLaboral.getText());
 									User user = new User("Empleado",txtUsername.getText(),txtContrasena.getText(),persona);
-								    Clinica.getInstance().regUser(user);
+								    
+									JavaConnect2SQL.getInstace().agregarEmpleado(persona, user.getUserName());
+									JavaConnect2SQL.getInstace().agregarUser(user);
 									
 
 									
@@ -357,7 +357,7 @@ public class RegEmpleado extends JDialog {
 							miEmp.setSexo(sexo);
 							if (checkFields2()==true)
 							{
-							Clinica.getInstance().modificarPersona(miEmp);
+							JavaConnect2SQL.getInstace().updateEmpleado(miEmp);
 							dispose();
 							ListarEmp.loadEmps();
 							}
@@ -426,7 +426,7 @@ public class RegEmpleado extends JDialog {
 		txtPuestoLaboral.setText("");
 		txtCorreoE.setText("");
 		cbSexo.setSelectedIndex(-1);
-		txtCodigo.setText("E-"+Clinica.getInstance().getcodPers());
+		txtCodigo.setText("E-"+Clinica.getInstance().getcodEmp());
 		txtUsername.setText("");
 		txtContrasena.setText("");
 		txtConfirm.setText("");
@@ -463,7 +463,7 @@ public class RegEmpleado extends JDialog {
 	
 	public boolean verificarCedulaRepetida() {
 		
-	    for (Persona persona : Clinica.getInstance().getMisPersonas()) {
+	    for (Empleado persona : JavaConnect2SQL.getInstace().getMisEmpleado("")) {
 	        if (persona.getCedula().equals(txtCedula.getText())) {
 	            return false;//se repite 
 	        }
@@ -472,13 +472,18 @@ public class RegEmpleado extends JDialog {
 	}
 	
 	public boolean verificarUserRepetido() {
-		
-	    for (User user : Clinica.getInstance().getMisUsers()) {
+	    for (User user : JavaConnect2SQL.getInstace().getMisUsers("")) {
 	        if (user.getUserName().equals(txtUsername.getText())) {
-	            return false;//se repite 
+	            // Check if the username belongs to the same doctor being modified
+	            if (miEmp != null && miEmp.getUserName().equalsIgnoreCase(user.getUserName())) {
+
+	                return true; // es el doctor que se ta modificanto.
+	            } else {
+	                return false; // se repite el username y es de otro user
+	            }
 	        }
 	    }
-	    return true; //no se repite
+	    return true; // no se repite
 	}
 	
 	public boolean verificarContrasena() {

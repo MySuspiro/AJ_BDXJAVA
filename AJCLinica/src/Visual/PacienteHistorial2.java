@@ -15,6 +15,7 @@ import logico.Consulta;
 import logico.Historial;
 import logico.Paciente;
 import logico.Vacuna;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -113,7 +114,7 @@ public class PacienteHistorial2 extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						if (!txtCedula.getText().isEmpty())
 						{
-							Paciente pac = (Paciente)Clinica.getInstance().buscarPersonaByCedula(txtCedula.getText());
+							Paciente pac = JavaConnect2SQL.getInstace().buscarPacienteByCedula(txtCedula.getText());
 							/*String nombreBuscado = txtCedula.getText();
 							System.out.println("cedula: " + txtCedula.getText());
 							loadConsultas(nombreBuscado);*/	
@@ -224,9 +225,9 @@ public class PacienteHistorial2 extends JDialog {
 		{
 			//JOptionPane.showMessageDialog(null, "Encontre Historial", "Error", JOptionPane.ERROR_MESSAGE);
 			boolean coincidencia=false;
-			ArrayList<Consulta> misConsultas = historial.getMisConsultas();
+			ArrayList<Consulta> misConsultas = JavaConnect2SQL.getInstace().getMisConsultas("Where PacienteCodigo = '" + clienteBuscado.getCodigo() + "'");
 			ArrayList<Vacuna> misVacunas = historial.getMisVacunas();
-			paciente=(Paciente) Clinica.getInstance().buscarPersonaByCedula(txtCedula.getText());
+			paciente= JavaConnect2SQL.getInstace().buscarPacienteByCedula(txtCedula.getText());
 			txtPaciente.setText(paciente.getNombre());
 			txtCodigo.setText(historial.getCodigo());
 			txtTipoSangre.setText(paciente.getTipoSangre());

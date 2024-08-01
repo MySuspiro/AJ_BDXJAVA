@@ -17,6 +17,14 @@ public class Vacuna implements Serializable{
 		this.cant = cant;
 		this.enf = enf;
 	}
+	public Vacuna(String codigo, String nombre2, String descripcion2, int cant, Enfermedad enf2) {
+		this.codigo = codigo;
+		this.nombre = nombre2;
+		this.descripcion = descripcion2;
+		this.cant = cant;
+		this.enf = enf2;
+
+	}
 	public String getCodigo() {
 		return codigo;
 	}

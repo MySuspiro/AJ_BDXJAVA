@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import logico.Clinica;
 import logico.Consulta;
 import logico.Enfermedad;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -83,7 +84,7 @@ public class ListarEnf extends JDialog {
 							if (index>=0) {
 								btnEliminar.setEnabled(true);
 								btnUpdate.setEnabled(true);
-								selected = Clinica.getInstance().buscarEnfermedadByCode(table.getValueAt(index,0).toString());
+								selected = JavaConnect2SQL.getInstace().buscarEnfermedadByCode(table.getValueAt(index,0).toString());
 							
 						}
 							
@@ -130,7 +131,7 @@ public class ListarEnf extends JDialog {
 							if (option== JOptionPane.OK_OPTION  ) {
 								if(verificarEnfermedad(selected)==false)//me quede aqui, hay que verificar que no este asignada en ningun lado
 								{
-									Clinica.getInstance().eliminarEnfermedad(selected);
+									JavaConnect2SQL.getInstace().deleteWithString("Enfermedad_Condicion", "Codigo", selected.getCodigo());
 									btnEliminar.setEnabled(false);
 									btnUpdate.setEnabled(false);
 									loadEnfermedades();
@@ -165,7 +166,7 @@ public class ListarEnf extends JDialog {
 		modelo.setRowCount(0);
 		row= new Object[table.getColumnCount()];
 		
-		for (Enfermedad enf: Clinica.getInstance().getMisEnfermedades()) {
+		for (Enfermedad enf: JavaConnect2SQL.getInstace().getMisEnfermedades("")) {
 			row[0]=enf.getCodigo();
 			row[1]=enf.getNombre();
 			row[2]=enf.getStatus();
@@ -178,7 +179,7 @@ public class ListarEnf extends JDialog {
 	public boolean verificarEnfermedad(Enfermedad enf) {
 	    boolean tieneEnf = false;
 
-	    ArrayList<Consulta> misConsul = Clinica.getInstance().getMisConsultas();
+	    ArrayList<Consulta> misConsul = JavaConnect2SQL.getInstace().getMisConsultas("");
 
 	    for (Consulta consul : misConsul) {
 	        if (consul.getEnfermedad().getCodigo().equalsIgnoreCase(enf.getCodigo())) {

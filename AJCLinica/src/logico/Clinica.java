@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import net.code.java.sql.JavaConnect2SQL;
+
 public class Clinica implements Serializable{
 
 	private ArrayList<Enfermedad> misEnfermedades;
@@ -16,6 +18,7 @@ public class Clinica implements Serializable{
 	private ArrayList<Persona> misPersonas;
 	private ArrayList<Historial> misHistoriales;
 	private ArrayList<CitaMedica> misCitas;
+    private ArrayList<Sintoma> misSintomas;
 	//en prueba pa lo fichero
 	private ArrayList<User> misUsers;
 	private static User loginUser;
@@ -34,7 +37,7 @@ public class Clinica implements Serializable{
 		misHistoriales = new ArrayList<Historial>();
 		misCitas = new ArrayList<CitaMedica>();
 		misUsers = new ArrayList<User>();
-		
+		misSintomas = new ArrayList<Sintoma>();
 	}
 	
 	public ArrayList<User> getMisUsers() {
@@ -149,7 +152,7 @@ public class Clinica implements Serializable{
 	
 	public boolean confirmLogin(String text, String text2) {
 		boolean login = false;
-		for (User user : misUsers) {
+		for (User user : JavaConnect2SQL.getInstace().getMisUsers("")) {
 			if(user.getUserName().equals(text) && user.getPass().equals(text2)){
 				loginUser = user;
 				login = true;
@@ -458,11 +461,11 @@ public class Clinica implements Serializable{
 	
 	public int vacunaCantPacientes(Vacuna vacuna) {
 		int count = 0;
-		for (Persona persona: misPersonas)
+		for (Paciente persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona instanceof Paciente )
 			{
-				try {
+				try {//fix
 					for (Vacuna vac: ((Paciente) persona).getHist().getMisVacunas())
 					{
 						if(vac.getCodigo().equalsIgnoreCase(vacuna.getCodigo()))
@@ -479,11 +482,11 @@ public class Clinica implements Serializable{
 	
 	public int EnfermoCantPacientes(Enfermedad enf) {
 		int count = 0;
-		for (Persona persona: misPersonas)
+		for (Paciente persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona instanceof Paciente )
 			{
-				try {
+				try {//fix
 					for (Enfermedad enfermedad: ((Paciente)persona).getHist().getMisEnfermedades())
 					{
 						if(enfermedad.getCodigo().equalsIgnoreCase(enf.getCodigo()))
@@ -501,7 +504,7 @@ public class Clinica implements Serializable{
 	
 	public int CantPacientes() {
 		int count = 0;
-		for (Persona persona: misPersonas)
+		for (Paciente persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona instanceof Paciente )
 			{
@@ -513,11 +516,11 @@ public class Clinica implements Serializable{
 	
 	public int CantPacientesEnfermos() {
 		int count = 0;
-		for (Persona persona: misPersonas)
+		for (Persona persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona instanceof Paciente )
 			{
-				try {
+				try {//fix
 					if(!((Paciente)persona).getHist().getMisEnfermedades().isEmpty()) {
 						count++;
 					}
@@ -531,11 +534,11 @@ public class Clinica implements Serializable{
 	
 	public int CantPacientesEnfermosVig() {
 		int count = 0;
-		for (Persona persona: misPersonas)
+		for (Persona persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona instanceof Paciente )
 			{
-				try {
+				try {//fix
 					for (Enfermedad enf : ((Paciente)persona).getHist().getMisEnfermedades()) {
 						if(enf.getStatus().equalsIgnoreCase("Vigilancia")) {
 							count++;
@@ -552,7 +555,7 @@ public class Clinica implements Serializable{
 	public int CantCitasXDoc(Doctor doc) {
 		int count = 0;
 		try {
-			for (CitaMedica aux : misCitas) {
+			for (CitaMedica aux : JavaConnect2SQL.getInstace().getMisCitas("")) {
 				if(aux.getDoctor().getNombre().equalsIgnoreCase(doc.getNombre())) {
 					count++;
 				}
@@ -582,6 +585,7 @@ public class Clinica implements Serializable{
 	public String getcodCita() {
 	    String mayor = "1000";
 	    String codigo = null;
+		ArrayList<CitaMedica> misCitas = JavaConnect2SQL.getInstace().getMisCitas("");
 	    for (CitaMedica aux : misCitas) {
 	        codigo = extractNumber2(aux.getCodigo());
 	        if (codigo != null && codigo.compareTo(mayor) > 0) {
@@ -607,6 +611,7 @@ public class Clinica implements Serializable{
 	public String getcodCons() {
 		String mayor = "1000";
 		String codigo = null;
+		ArrayList<Consulta> misConsultas = JavaConnect2SQL.getInstace().getMisConsultas("");
 		for (Consulta aux : misConsultas) {
 			codigo = extractNumber(aux.getCodigoConsulta());
 			if(codigo.compareTo(mayor) > 0) {
@@ -621,6 +626,7 @@ public class Clinica implements Serializable{
 	public String getcodEnf() {
 		String mayor = "1000";
 		String codigo = null;
+		ArrayList<Enfermedad> misEnfermedades = JavaConnect2SQL.getInstace().getMisEnfermedades("");
 		for (Enfermedad aux : misEnfermedades) {
 			codigo = extractNumber(aux.getCodigo());
 			if(codigo.compareTo(mayor) > 0) {
@@ -635,6 +641,7 @@ public class Clinica implements Serializable{
 	public String getcodVac() {
 		String mayor = "1000";
 		String codigo = null;
+		ArrayList<Vacuna> misVacunas = JavaConnect2SQL.getInstace().getMisVacunas("");
 		for (Vacuna aux : misVacunas) {
 			codigo = extractNumber(aux.getCodigo());
 			if(codigo.compareTo(mayor) > 0) {
@@ -645,10 +652,39 @@ public class Clinica implements Serializable{
 		return resultado;	
 	}
 
-	public String getcodPers() {
+	public String getcodPac() {
 		String mayor = "1000";
 		String codigo = null;
-		for (Persona aux : misPersonas) {
+		ArrayList<Paciente> misPersonas = JavaConnect2SQL.getInstace().getMisPacientes("");
+		for (Paciente aux : misPersonas) {
+			codigo = extractNumber(aux.getCodigo());
+			if(codigo.compareTo(mayor) > 0) {
+				mayor = codigo;
+			}
+		}
+		String resultado = Integer.toString(Integer.parseInt(mayor) + 1);
+		return resultado;
+	}
+	
+	public String getcodEmp() {
+		String mayor = "1000";
+		String codigo = null;
+		ArrayList<Empleado> misPersonas = JavaConnect2SQL.getInstace().getMisEmpleado("");
+		for (Empleado aux : misPersonas) {
+			codigo = extractNumber(aux.getCodigo());
+			if(codigo.compareTo(mayor) > 0) {
+				mayor = codigo;
+			}
+		}
+		String resultado = Integer.toString(Integer.parseInt(mayor) + 1);
+		return resultado;
+	}
+	
+	public String getcodDoc() {
+		String mayor = "1000";
+		String codigo = null;
+		ArrayList<Doctor> misPersonas = JavaConnect2SQL.getInstace().getMisDoctor("");
+		for (Doctor aux : misPersonas) {
 			codigo = extractNumber(aux.getCodigo());
 			if(codigo.compareTo(mayor) > 0) {
 				mayor = codigo;
@@ -675,6 +711,27 @@ public class Clinica implements Serializable{
 		}
 		return sb.toString();
 	}
+	
+	public ArrayList<Sintoma> getMisSintomas() {
+        return misSintomas;
+    }
+    public void setMisSintomas(ArrayList<Sintoma> misSintomas) {
+        this.misSintomas = misSintomas;
+    }
+
+
+    public String getcodSin() {
+        String mayor = "1000";
+        String codigo = null;
+        for (Sintoma aux : misSintomas) {
+            codigo = extractNumber(aux.getCodigo());
+            if(codigo.compareTo(mayor) > 0) {
+                mayor = codigo;
+            }
+        }
+        String resultado = Integer.toString(Integer.parseInt(mayor) + 1);
+        return resultado;
+    }
 	
 	
 }

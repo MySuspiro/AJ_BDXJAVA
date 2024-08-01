@@ -17,6 +17,7 @@ import logico.Doctor;
 import logico.Historial;
 import logico.Paciente;
 import logico.Persona;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -85,7 +86,7 @@ public class RegPaciente extends JDialog {
 			{
 				txtCodigo = new JTextField();
 				txtCodigo.setEditable(false);
-				txtCodigo.setText("P-"+Clinica.getInstance().getcodPers());
+				txtCodigo.setText("P-"+Clinica.getInstance().getcodPac());
 				txtCodigo.setColumns(10);
 				txtCodigo.setBounds(44, 46, 228, 22);
 				panel.add(txtCodigo);
@@ -251,9 +252,7 @@ public class RegPaciente extends JDialog {
 									
 									//Paciente paciente = new Paciente(txtCedula.getText(),txtNombre.getText(),txtDireccion.getText(),txtCodigo.getText(),txtTelefono.getText(),sexo,txtCorreoE.getText(),txtSeguro.getText());
 									//Clinica.getInstance().agregarPersona(paciente);
-									Historial hist = new Historial(txtCedula.getText());
 									//paciente.setHist(hist);
-									Clinica.getInstance().agregarHistorial(hist);
 									JOptionPane.showMessageDialog(null,"Operación satisfactoria","Registro", JOptionPane.INFORMATION_MESSAGE);
 									//dispose();
 								    clean();
@@ -291,9 +290,9 @@ public class RegPaciente extends JDialog {
 							miPaciente.setSexo(sexo);
 							if (checkFields()==true)
 							{
-							Clinica.getInstance().modificarPersona(miPaciente);
-							dispose();
-							ListarPaciente.loadPacientes();
+								JavaConnect2SQL.getInstace().updatePaciente(miPaciente);
+								dispose();
+								ListarPaciente.loadPacientes();
 							}
 							else
 							{
@@ -387,7 +386,7 @@ public class RegPaciente extends JDialog {
 		txtSeguro.setText("");
 		txtCorreoE.setText("");
 		cbSexo.setSelectedIndex(-1);
-		txtCodigo.setText("P-"+Clinica.getInstance().getcodPers());
+		txtCodigo.setText("P-"+Clinica.getInstance().getcodPac());
 		
 	}
 	
@@ -406,8 +405,8 @@ public class RegPaciente extends JDialog {
 	}
 	
 	public boolean verificarCedulaRepetida() {
-		if(Clinica.getInstance().getMisPersonas().isEmpty()) {
-			for (Persona persona : Clinica.getInstance().getMisPersonas()) {
+		if(JavaConnect2SQL.getInstace().getMisPacientes("").isEmpty()) {
+			for (Paciente persona : JavaConnect2SQL.getInstace().getMisPacientes("")) {
 		        if (persona.getCedula().equals(txtCedula.getText())) {
 		            return false;//se repite 
 		        }

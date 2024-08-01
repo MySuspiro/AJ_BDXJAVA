@@ -17,6 +17,7 @@ import logico.Doctor;
 import logico.Empleado;
 import logico.Persona;
 import logico.User;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -81,7 +82,7 @@ public class ListarEmp extends JDialog {
 						if (index>=0) {
 							btnEliminar.setEnabled(true);
 							btnUpdate.setEnabled(true);
-							selected = (Empleado) Clinica.getInstance().buscarPersonaByCodigo(table.getValueAt(index,0).toString());
+							selected = JavaConnect2SQL.getInstace().buscarEmpleadoByCodigo(table.getValueAt(index,0).toString());
 							
 						}
 					}
@@ -127,7 +128,7 @@ public class ListarEmp extends JDialog {
 								int option = JOptionPane.showConfirmDialog(null, "Está seguro(a) que desea eliminar el Empleado con código: "+ selected.getCodigo(), "Confirmación", JOptionPane.OK_CANCEL_OPTION);
 								if (option== JOptionPane.OK_OPTION  ) {
 
-										Clinica.getInstance().eliminarPersona(selected);
+										JavaConnect2SQL.getInstace().deleteWithString("Empleado", "Codigo", selected.getCodigo());
 										btnEliminar.setEnabled(false);
 										btnUpdate.setEnabled(false);
 										loadEmps();
@@ -159,7 +160,7 @@ public class ListarEmp extends JDialog {
 		modelo.setRowCount(0);
 		row= new Object[table.getColumnCount()];
 		
-		for (Persona persona: Clinica.getInstance().getMisPersonas()) {
+		for (Empleado persona: JavaConnect2SQL.getInstace().getMisEmpleado("")) {
 			if(persona instanceof Empleado)
 			{
 				row[0]=persona.getCodigo();

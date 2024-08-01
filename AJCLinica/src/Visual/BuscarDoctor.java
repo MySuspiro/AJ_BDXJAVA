@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import logico.Clinica;
 import logico.Doctor;
 import logico.Persona;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -81,7 +82,7 @@ public class BuscarDoctor extends JDialog {
 							//HOLA AQUI ME QUEDE
 							int indexCli=table.getSelectedRow();
 							if (indexCli>=0) {
-								selected = (Doctor) Clinica.getInstance().buscarPersonaByCodigo(table.getValueAt(indexCli,0).toString());
+								selected = JavaConnect2SQL.getInstace().buscarDoctorByCodigo(table.getValueAt(indexCli,0).toString());
 								if (selected!=null)
 								{
 									btnSel.setEnabled(true);
@@ -150,7 +151,7 @@ public class BuscarDoctor extends JDialog {
 	    nombreBuscado = nombreBuscado.toLowerCase();
 	    boolean coincidencia=false;
 
-	    for (Persona doc : Clinica.getInstance().getMisPersonas()) {
+	    for (Persona doc : JavaConnect2SQL.getInstace().getMisDoctor("")) {
 	    	if(doc instanceof Doctor) {
 		        if (doc.getNombre().toLowerCase().contains(nombreBuscado)|| doc.getCedula().equals(nombreBuscado) || ((Doctor) doc).getEspecialidad().equalsIgnoreCase(nombreBuscado) ) {
 		            row[0] = doc.getCodigo();

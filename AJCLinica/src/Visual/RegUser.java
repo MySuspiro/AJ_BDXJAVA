@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 import logico.Clinica;
 import logico.User;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -100,7 +101,7 @@ public class RegUser extends JDialog {
 								if(verificarContrasena()==true)
 								{
 									User user = new User("Administrador",txtUsername.getText(),txtContrasena.getText(),null);
-								    Clinica.getInstance().regUser(user);
+								    JavaConnect2SQL.getInstace().agregarUser(user);
 								    JOptionPane.showMessageDialog(null,"Operación satisfactoria","Registro", JOptionPane.INFORMATION_MESSAGE);
 								    clean();
 									

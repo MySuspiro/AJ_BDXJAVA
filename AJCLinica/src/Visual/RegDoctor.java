@@ -13,6 +13,7 @@ import logico.Clinica;
 import logico.Doctor;
 import logico.Persona;
 import logico.User;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -179,7 +180,7 @@ public class RegDoctor extends JDialog {
 					txtCodigo.setBounds(30, 45, 267, 22);
 					panel_1.add(txtCodigo);
 					txtCodigo.setEditable(false);
-					txtCodigo.setText("D-"+Clinica.getInstance().getcodPers());
+					txtCodigo.setText("D-"+Clinica.getInstance().getcodDoc());
 					txtCodigo.setColumns(10);
 				}
 				{
@@ -309,12 +310,12 @@ public class RegDoctor extends JDialog {
 									sexo='M';
 									}
 									
-									Persona persona = new Doctor(txtCedula.getText(),txtNombre.getText(),txtDireccion.getText(),txtCodigo.getText(),txtTelefono.getText(),sexo,txtCorreoE.getText(),txtEspecialidad.getText());
-									Clinica.getInstance().agregarPersona(persona);
+									Doctor persona = new Doctor(txtCedula.getText(),txtNombre.getText(),txtDireccion.getText(),txtCodigo.getText(),txtTelefono.getText(),sexo,txtCorreoE.getText(),txtEspecialidad.getText());
+									JavaConnect2SQL.getInstace().agregarDoctor(persona, txtUsername.getText());
 									
 				
 									User user = new User("Doctor",txtUsername.getText(),txtContrasena.getText(),persona);
-								    Clinica.getInstance().regUser(user);
+								    JavaConnect2SQL.getInstace().agregarUser(user);
 									
 
 									
@@ -337,7 +338,7 @@ public class RegDoctor extends JDialog {
 						}else
 						{
 						    
-							for (User user : Clinica.getInstance().getMisUsers()) {
+							for (User user : JavaConnect2SQL.getInstace().getMisUsers("")) {
 							    if (user != null && user.getPersona() != null && miDoctor != null) {
 							        if (user.getPersona().getCodigo().equalsIgnoreCase(miDoctor.getCodigo())) {
 							            if (verificarContrasena()) {
@@ -371,8 +372,8 @@ public class RegDoctor extends JDialog {
 							miDoctor.setSexo(sexo);
 							if (checkFields()==true && verificarUserRepetido()==true)
 							{
-							Clinica.getInstance().modificarPersona(miDoctor);
-							Clinica.getInstance().modificarUser(miUser);
+								JavaConnect2SQL.getInstace().updateDoctor(miDoctor);
+								JavaConnect2SQL.getInstace().updateUser(miUser);
 							dispose();
 							ListarDoctor.loadDoctores();
 							}
@@ -426,26 +427,13 @@ public class RegDoctor extends JDialog {
 			}
 			txtDireccion.setText(miDoctor.getDir());
 			
-			for (User user : Clinica.getInstance().getMisUsers()) {
-			    System.out.println("Current User: " + user);
-
-			    if (user != null) {
-			        System.out.println("User's Persona: " + user.getPersona());
-
-			        if (user.getPersona() != null && miDoctor != null) {
-			            if (user.getPersona().getCodigo().equalsIgnoreCase(miDoctor.getCodigo())) {
-			                txtUsername.setText(user.getUserName());
-			                txtContrasena.setText(user.getPass());
-			                txtConfirm.setText(user.getPass());
-			            }
-			        } else {
-			            System.out.println("Either user.getPersona() or miDoctor is null.");
-			        }
-			    } else {
-			        System.out.println("User is null.");
-			    }
+			User user = JavaConnect2SQL.getInstace().buscarUserByName(miDoctor.getUserName());
+			if(user != null) {
+				txtUsername.setText(user.getUserName());
+	            txtContrasena.setText(user.getPass());
+	            txtConfirm.setText(user.getPass());
 			}
-
+			
 			
 		   /* for (User user : Clinica.getInstance().getMisUsers()) {
 		        if (user.getPersona().getCodigo().equalsIgnoreCase(miDoctor.getCodigo())) {
@@ -468,7 +456,7 @@ public class RegDoctor extends JDialog {
 		txtEspecialidad.setText("");
 		txtCorreoE.setText("");
 		cbSexo.setSelectedIndex(-1);
-		txtCodigo.setText("D-"+Clinica.getInstance().getcodPers());
+		txtCodigo.setText("D-"+Clinica.getInstance().getcodDoc());
 		txtUsername.setText("");
 		txtContrasena.setText("");
 		txtConfirm.setText("");
@@ -491,7 +479,7 @@ public class RegDoctor extends JDialog {
 	
 	
 	public boolean verificarCedulaRepetida() {
-	    for (Persona persona : Clinica.getInstance().getMisPersonas()) {
+	    for (Doctor persona : JavaConnect2SQL.getInstace().getMisDoctor("")) {
 	        if (persona.getCedula().equals(txtCedula.getText())) {
 	            if (miDoctor != null && persona.getCodigo().equalsIgnoreCase(miDoctor.getCodigo())) {
 	                return true; // la cedula del que se ta modificando
@@ -505,10 +493,10 @@ public class RegDoctor extends JDialog {
 
 	
 	public boolean verificarUserRepetido() {
-	    for (User user : Clinica.getInstance().getMisUsers()) {
+	    for (User user : JavaConnect2SQL.getInstace().getMisUsers("")) {
 	        if (user.getUserName().equals(txtUsername.getText())) {
 	            // Check if the username belongs to the same doctor being modified
-	            if (miDoctor != null && user.getPersona().getCodigo().equalsIgnoreCase(miDoctor.getCodigo())) {
+	            if (miDoctor != null && miDoctor.getUserName().equalsIgnoreCase(user.getUserName())) {
 	                return true; // es el doctor que se ta modificanto.
 	            } else {
 	                return false; // se repite el username y es de otro user

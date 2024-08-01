@@ -14,6 +14,7 @@ import logico.Clinica;
 import logico.Paciente;
 import logico.Persona;
 import logico.Vacuna;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -70,7 +71,7 @@ public class ListarVacuna extends JDialog {
 							if (index >= 0) {
 								btnEliminar.setEnabled(true);
 								btnUpdate.setEnabled(true);
-								selected = Clinica.getInstance().buscarVacunaByCod(table.getValueAt(index,0).toString());
+								selected = JavaConnect2SQL.getInstace().buscarVacunaByCod(table.getValueAt(index,0).toString());
 							}
 							
 						}
@@ -113,7 +114,7 @@ public class ListarVacuna extends JDialog {
 						if (selected!=null) {
 							int option = JOptionPane.showConfirmDialog(null, "Está seguro(a) que desea eliminar el Paciente con código: "+ selected.getCodigo(), "Confirmación", JOptionPane.OK_CANCEL_OPTION);
 							if (option == JOptionPane.OK_OPTION  ) {
-									Clinica.getInstance().eliminarVacuna(selected);
+									JavaConnect2SQL.getInstace().deleteWithString("Vacuna", "Codigo", selected.getCodigo());
 									btnEliminar.setEnabled(false);
 									btnUpdate.setEnabled(false);
 									loadVacunas();
@@ -144,7 +145,7 @@ public class ListarVacuna extends JDialog {
 		modelo.setRowCount(0);
 		row = new Object[table.getColumnCount()];
 		
-		for (Vacuna aux: Clinica.getInstance().getMisVacunas()) {	
+		for (Vacuna aux: JavaConnect2SQL.getInstace().getMisVacunas("")) {	
 			row[0] = aux.getCodigo();
 			row[1] = aux.getNombre();
 			row[2] = aux.getDescripcion();

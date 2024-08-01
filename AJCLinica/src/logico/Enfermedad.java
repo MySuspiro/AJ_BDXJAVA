@@ -8,9 +8,19 @@ public class Enfermedad implements Serializable {
 	private String Nombre;
 	private String Status;
 	private String descripcion;
-	public Enfermedad(String codigo, String nombre, String status, String descripcion) {
+	
+	public Enfermedad(String nombre, String status, String descripcion) {
 		super();
 		Codigo = "E-"+Clinica.getInstance().getcodEnf();
+		Nombre = nombre;
+		this.Status = status;
+		this.descripcion = descripcion;
+	}
+
+	
+	public Enfermedad(String codigo, String nombre, String status, String descripcion) {
+		super();
+		this.Codigo = codigo;
 		Nombre = nombre;
 		this.Status = status;
 		this.descripcion = descripcion;

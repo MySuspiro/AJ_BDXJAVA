@@ -19,6 +19,7 @@ import logico.Doctor;
 import logico.Empleado;
 import logico.Persona;
 import logico.User;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -79,7 +80,7 @@ public class ListarCita2 extends JDialog {
 						if (index>=0) {
 							btnEliminar.setEnabled(true);
 							btnUpdate.setEnabled(true);
-							selected = Clinica.getInstance().buscarCitaByCode(table.getValueAt(index,0).toString());
+							selected = JavaConnect2SQL.getInstace().buscarCitaByCode(table.getValueAt(index,0).toString());
 							
 						}
 					}
@@ -122,8 +123,7 @@ public class ListarCita2 extends JDialog {
 						if (selected!=null) {
 							int option = JOptionPane.showConfirmDialog(null, "Está seguro(a) que desea eliminar la Cita con código: "+ selected.getCodigo(), "Confirmación", JOptionPane.OK_CANCEL_OPTION);
 							if (option== JOptionPane.OK_OPTION  ) {
-
-									Clinica.getInstance().eliminarCitas(selected);
+									JavaConnect2SQL.getInstace().deleteWithString("CitaMedica", "Codigo", selected.getCodigo());
 									btnEliminar.setEnabled(false);
 									btnUpdate.setEnabled(false);
 									loadCitas();
@@ -154,7 +154,7 @@ public class ListarCita2 extends JDialog {
 	    modelo.setRowCount(0);
 	    row = new Object[table.getColumnCount()];
 
-	    for (CitaMedica persona : Clinica.getInstance().getMisCitas()) {
+	    for (CitaMedica persona : JavaConnect2SQL.getInstace().getMisCitas("")) {
 	    	if(miDoc.getCodigo().equalsIgnoreCase(persona.getDoctor().getCodigo()))
 	    	{
 		        row[0] = persona.getCodigo();

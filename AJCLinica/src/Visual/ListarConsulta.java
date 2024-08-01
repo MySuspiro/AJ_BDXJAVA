@@ -15,6 +15,7 @@ import javax.swing.table.TableColumnModel;
 
 import logico.Clinica;
 import logico.Consulta;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -111,7 +112,7 @@ public class ListarConsulta extends JDialog {
 		modelo.setRowCount(0);
 		row= new Object[table.getColumnCount()];
 		
-		for (Consulta cliente: Clinica.getInstance().getMisConsultas()) {
+		for (Consulta cliente: JavaConnect2SQL.getInstace().getMisConsultas("")) {
 			row[0]=cliente.getCodigoConsulta();
 			row[1]=cliente.getFechaConsulta();
 			row[2]=cliente.getPaciente().getNombre();

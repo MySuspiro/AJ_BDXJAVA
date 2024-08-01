@@ -13,12 +13,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logico.CitaMedica;
-import logico.Clinica;
 import logico.Consulta;
 import logico.Doctor;
 import logico.Empleado;
 import logico.Persona;
 import logico.User;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -86,7 +86,7 @@ public class ListarDoctor extends JDialog {
 						if (index>=0) {
 							btnEliminar.setEnabled(true);
 							btnUpdate.setEnabled(true);
-							selected = (Doctor) Clinica.getInstance().buscarPersonaByCodigo(table.getValueAt(index,0).toString());
+							selected = JavaConnect2SQL.getInstace().buscarDoctorByCodigo(table.getValueAt(index,0).toString());
 							
 						}
 					}
@@ -130,10 +130,9 @@ public class ListarDoctor extends JDialog {
 							int option = JOptionPane.showConfirmDialog(null, "Está seguro(a) que desea eliminar el Cliente con código: "+ selected.getCodigo(), "Confirmación", JOptionPane.OK_CANCEL_OPTION);
 							if (option== JOptionPane.OK_OPTION  ) {
 
-									Clinica.getInstance().eliminarPersona(selected);
-									
+									JavaConnect2SQL.getInstace().deleteWithString("Paciente", "Codigo", selected.getCodigo());
 									//NUEVO
-									for (User user : Clinica.getInstance().getMisUsers()) {
+									for (User user : JavaConnect2SQL.getInstace().getMisUsers("")) {
 									    System.out.println("Current User: " + user);
 
 									    if (user != null) {
@@ -141,7 +140,7 @@ public class ListarDoctor extends JDialog {
 
 									        if (user.getPersona() != null && selected != null) {
 									            if (user.getPersona().getCodigo().equalsIgnoreCase(selected.getCodigo())) {
-									            	Clinica.getInstance().eliminarUser(user);
+									            	JavaConnect2SQL.getInstace().deleteWithString("User", "UserName", user.getUserName());
 									            }
 									        } else {
 									            System.out.println("Either user.getPersona() or miDoctor is null.");
@@ -188,16 +187,14 @@ public class ListarDoctor extends JDialog {
 		modelo.setRowCount(0);
 		row= new Object[table.getColumnCount()];
 		
-		for (Persona persona: Clinica.getInstance().getMisPersonas()) {
-			if(persona instanceof Doctor)
-			{
+		for (Doctor persona: JavaConnect2SQL.getInstace().getMisDoctor("")) {
 				row[0]=persona.getCodigo();
 				row[1]=persona.getNombre();
 				row[2]=persona.getTelefono();
-				row[3]=((Doctor) persona).getEspecialidad();
+				row[3]=persona.getEspecialidad();
 				modelo.addRow(row);	
 				
-			}
+			
 		}	
 		
 	}
@@ -208,7 +205,7 @@ public class ListarDoctor extends JDialog {
 	public boolean verificarDoc(Doctor doc) {
 		
 		
-		for (Consulta consul: Clinica.getInstance().getMisConsultas()) {
+		for (Consulta consul: JavaConnect2SQL.getInstace().getMisConsultas("")) {
 			if(consul.getDoctor().getCodigo().equalsIgnoreCase(doc.getCodigo()))
 			{
 				return false;
@@ -216,7 +213,7 @@ public class ListarDoctor extends JDialog {
 			}
 		}
 		
-		for (CitaMedica cita: Clinica.getInstance().getMisCitas()) {
+		for (CitaMedica cita: JavaConnect2SQL.getInstace().getMisCitas("")) {
 			if(cita.getDoctor().getCodigo().equalsIgnoreCase(doc.getCodigo()))
 			{
 				return false;

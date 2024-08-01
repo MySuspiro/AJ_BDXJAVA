@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import logico.CitaMedica;
 import logico.Clinica;
 import logico.Doctor;
+import net.code.java.sql.JavaConnect2SQL;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -89,7 +90,7 @@ public class AgendaSemanal2 extends JDialog {
         }
 
        
-        for (CitaMedica cita : Clinica.getInstance().getMisCitas()) {
+        for (CitaMedica cita : JavaConnect2SQL.getInstace().getMisCitas("")) {
             if (cita.getDoctor().getCedula().equalsIgnoreCase(doctor.getCedula())) {
                 // Verificar si la cita está en la semana actual
                 Calendar calCita = Calendar.getInstance();

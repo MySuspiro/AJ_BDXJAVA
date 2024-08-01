@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.CitaMedica;
 import logico.Clinica;
+import net.code.java.sql.JavaConnect2SQL;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -93,7 +94,7 @@ public class AgendaSemanal extends JDialog {
 
 
       
-        for (CitaMedica cita : Clinica.getInstance().getMisCitas()) {
+        for (CitaMedica cita : JavaConnect2SQL.getInstace().getMisCitas("")) {
             Calendar calCita = Calendar.getInstance();
             calCita.setTime(cita.getFecha());
             int semanaCita = calCita.get(Calendar.WEEK_OF_YEAR);

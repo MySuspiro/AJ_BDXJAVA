@@ -12,6 +12,7 @@ import javax.swing.border.TitledBorder;
 import logico.Clinica;
 import logico.Enfermedad;
 import logico.Vacuna;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -101,7 +102,7 @@ public class RegVacuna extends JDialog {
 		cmbEnf.setBounds(36, 102, 149, 22);
 		panel.add(cmbEnf);
 		cmbEnf.addItem("<Seleccione>");
-		for (Enfermedad aux : Clinica.getInstance().getMisEnfermedades()) {
+		for (Enfermedad aux : JavaConnect2SQL.getInstace().getMisEnfermedades("")) {
 			cmbEnf.addItem(aux.getNombre());
 		}
 		
@@ -128,11 +129,11 @@ public class RegVacuna extends JDialog {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						Enfermedad enf = null;
-						enf = Clinica.getInstance().buscarEnfermedadByNom(cmbEnf.getSelectedItem().toString());
+						enf = JavaConnect2SQL.getInstace().buscarEnfermedadByNom(cmbEnf.getSelectedItem().toString());
 						if(miVacuna == null) {
 							if(txtNom.getText() != null && txtDesc.getText() != null && enf != null) {
 								Vacuna vac = new Vacuna(txtNom.getText(), txtDesc.getText(), (int)spnCant.getValue(), enf);
-								Clinica.getInstance().agregarVacuna(vac);
+								JavaConnect2SQL.getInstace().agregarVacuna(vac);
 								JOptionPane.showMessageDialog(null, "Operación satisfactoria", "Vacunas", JOptionPane.INFORMATION_MESSAGE);
 								clean();
 							}
@@ -141,7 +142,7 @@ public class RegVacuna extends JDialog {
 							miVacuna.setNombre(txtNom.getText());
 							miVacuna.SetCant((int)spnCant.getValue());
 							if(txtNom.getText() != null && txtDesc.getText() != null && enf != null) {
-								Clinica.getInstance().modificarVacuna(miVacuna);
+								JavaConnect2SQL.getInstace().updateVacuna(miVacuna);
 								JOptionPane.showMessageDialog(null, "Operación satisfactoria", "Vacunas", DISPOSE_ON_CLOSE);
 								dispose();
 							}

@@ -16,11 +16,13 @@ public class Persona implements Serializable {
 		this.cedula = cedula;
 		this.nombre = nombre;
 		this.dir = dir;
-		this.codigo = codigo;
 		this.telefono = telefono;
 		this.sexo = sexo;
 		this.correoElectronico = correoElectronico;
 	}
+	
+	
+	
 	
 	public String getCedula() {
 		return cedula;

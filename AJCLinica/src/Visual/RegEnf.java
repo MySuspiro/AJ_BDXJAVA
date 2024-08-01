@@ -17,6 +17,7 @@ import javax.swing.border.TitledBorder;
 import logico.CitaMedica;
 import logico.Clinica;
 import logico.Enfermedad;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JRadioButton;
 import javax.swing.border.SoftBevelBorder;
@@ -138,7 +139,7 @@ public class RegEnf extends JDialog {
 									status = "Normal";
 								}
 								Enfermedad enf = new Enfermedad(txtCodigo.getText(), txtNombre.getText(), status, txtDescripcion.getText());
-								Clinica.getInstance().agregarEnfermedad(enf);
+								JavaConnect2SQL.getInstace().agregarEnfermedad(enf);
 								JOptionPane.showMessageDialog(null, "Enfermedad registrada correcta", "Enfermedad", JOptionPane.INFORMATION_MESSAGE);
 								Clean();
 								
@@ -153,7 +154,7 @@ public class RegEnf extends JDialog {
 									miEnf.setStatus("Normal");
 								}
 								
-								Clinica.getInstance().modificarEnfermedad(miEnf);
+								JavaConnect2SQL.getInstace().updateEnfermedad(miEnf);
 								dispose();
 								ListarEnf.loadEnfermedades();
 								

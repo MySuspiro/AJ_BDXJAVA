@@ -52,6 +52,7 @@ public class Login extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				/*
 				FileInputStream empresa;
 				FileOutputStream empresa2;
 				ObjectInputStream empresaRead;
@@ -83,7 +84,7 @@ public class Login extends JFrame {
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				
 				try {
 					Login frame = new Login();
