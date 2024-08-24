@@ -99,27 +99,27 @@ public class PacienteHistorial extends JDialog {
 				}
 			}
 			{
-				JLabel label = new JLabel("C\u00F3digo Historial:");
-				label.setBounds(12, 27, 97, 16);
-				panel.add(label);
+				JLabel lblSeguro = new JLabel("Seguro:");
+				lblSeguro.setBounds(465, 27, 59, 16);
+				panel.add(lblSeguro);
 			}
 			{
 				txtCodigo = new JTextField();
 				txtCodigo.setEditable(false);
 				txtCodigo.setColumns(10);
-				txtCodigo.setBounds(128, 24, 77, 22);
+				txtCodigo.setBounds(526, 24, 136, 22);
 				panel.add(txtCodigo);
 			}
 			{
 				JLabel label = new JLabel("Nombre Paciente:");
-				label.setBounds(224, 27, 122, 16);
+				label.setBounds(12, 27, 122, 16);
 				panel.add(label);
 			}
 			{
 				txtPaciente = new JTextField();
 				txtPaciente.setEditable(false);
 				txtPaciente.setColumns(10);
-				txtPaciente.setBounds(365, 24, 281, 22);
+				txtPaciente.setBounds(127, 24, 289, 22);
 				panel.add(txtPaciente);
 			}
 			{
@@ -190,15 +190,18 @@ public class PacienteHistorial extends JDialog {
 		row2= new Object[table.getColumnCount()];
 		historial = clienteBuscado.getHist();
 		txtTipoSangre.setText(clienteBuscado.getTipoSangre());
-		float obesi = 0;
 		txtObesi.setText("");
 		//peso (kg) / [estatura (m)]2
-		obesi = ((float)clienteBuscado.getPeso()/2.205f)/(float)(Math.pow((float)clienteBuscado.getAltura()/100f, 2));
-		if(obesi<18.50) {
+		float pesoKilogramos = (float)clienteBuscado.getPeso() * 0.453592f;
+		float alturaMetros = clienteBuscado.getAltura()/100.0f;
+		float obesi = pesoKilogramos / (alturaMetros * alturaMetros);
+		
+		if(obesi<18.50) 
+		{
 			txtObesi.setText("Bajo peso"); 
-		} else if(obesi<24.9) {
+		} else if(obesi>=18.5 && obesi < 24.9) {
 			txtObesi.setText("Normal"); 
-		}else if(obesi<29.9) {
+		}else if(obesi>=25 && obesi < 29.9) {
 			txtObesi.setText("Sobrepeso"); 
 		}else {
 			txtObesi.setText("Obesidad"); 
@@ -215,7 +218,7 @@ public class PacienteHistorial extends JDialog {
 			ArrayList<Vacuna> misVacunas = historial.getMisVacunas();
 			//paciente=(Paciente) Clinica.getInstance().buscarPersonaByCedula(txtCedula.getText());
 			txtPaciente.setText(clienteBuscado.getNombre());
-			txtCodigo.setText(clienteBuscado.getCodigo());
+			txtCodigo.setText(clienteBuscado.getSeguro());
 
 			for (Consulta consulta : misConsultas) {
 				if (consulta.getPaciente().getCedula().equals(clienteBuscado.getCedula())) {

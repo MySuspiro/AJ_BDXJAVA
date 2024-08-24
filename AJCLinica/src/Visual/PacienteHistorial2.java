@@ -127,27 +127,27 @@ public class PacienteHistorial2 extends JDialog {
 				panel.add(btnBuscar);
 			}
 			{
-				JLabel label = new JLabel("C\u00F3digo Historial:");
-				label.setBounds(19, 66, 97, 16);
-				panel.add(label);
+				JLabel lblCdigoPaciente = new JLabel("Seguro:");
+				lblCdigoPaciente.setBounds(22, 66, 60, 16);
+				panel.add(lblCdigoPaciente);
 			}
 			{
 				txtCodigo = new JTextField();
 				txtCodigo.setEditable(false);
 				txtCodigo.setColumns(10);
-				txtCodigo.setBounds(135, 63, 77, 22);
+				txtCodigo.setBounds(88, 63, 137, 22);
 				panel.add(txtCodigo);
 			}
 			{
 				JLabel label = new JLabel("Nombre Paciente:");
-				label.setBounds(231, 66, 122, 16);
+				label.setBounds(239, 66, 122, 16);
 				panel.add(label);
 			}
 			{
 				txtPaciente = new JTextField();
 				txtPaciente.setEditable(false);
 				txtPaciente.setColumns(10);
-				txtPaciente.setBounds(372, 63, 281, 22);
+				txtPaciente.setBounds(375, 63, 275, 22);
 				panel.add(txtPaciente);
 			}
 			{
@@ -216,29 +216,32 @@ public class PacienteHistorial2 extends JDialog {
 		row= new Object[table.getColumnCount()];
 		modelo2.setRowCount(0);
 		row2= new Object[table.getColumnCount()];
-		historial = clienteBuscado.getHist();
 		//historial = Clinica.getInstance().buscarHistorialByCedula(txtCedula.getText());
 		//System.out.println("Valor de historial: " + historial.getCodigo());
 		//JOptionPane.showMessageDialog(null, "Llegue aqui", "Error", JOptionPane.ERROR_MESSAGE);
 
-		if (historial!=null) 
+		if (clienteBuscado!=null) 
 		{
+			historial = new Historial(clienteBuscado.getCedula());
 			//JOptionPane.showMessageDialog(null, "Encontre Historial", "Error", JOptionPane.ERROR_MESSAGE);
 			boolean coincidencia=false;
 			ArrayList<Consulta> misConsultas = JavaConnect2SQL.getInstace().getMisConsultas("Where PacienteCodigo = '" + clienteBuscado.getCodigo() + "'");
 			ArrayList<Vacuna> misVacunas = historial.getMisVacunas();
-			paciente= JavaConnect2SQL.getInstace().buscarPacienteByCedula(txtCedula.getText());
+			paciente= clienteBuscado;
 			txtPaciente.setText(paciente.getNombre());
-			txtCodigo.setText(historial.getCodigo());
+			txtCodigo.setText(paciente.getSeguro());
 			txtTipoSangre.setText(paciente.getTipoSangre());
-			float obesi = 0;
 			txtObesi.setText("");
-			obesi = ((float)clienteBuscado.getPeso()/2.205f)/(float)(Math.pow((float)clienteBuscado.getAltura()/100f, 2));
-			if(obesi<18.50) {
+			float pesoKilogramos = (float)clienteBuscado.getPeso() * 0.453592f;
+			float alturaMetros = clienteBuscado.getAltura()/100.0f;
+			float obesi = pesoKilogramos / (alturaMetros * alturaMetros);
+			
+			if(obesi<18.50) 
+			{
 				txtObesi.setText("Bajo peso"); 
-			} else if(obesi<24.9) {
+			} else if(obesi>=18.5 && obesi < 24.9) {
 				txtObesi.setText("Normal"); 
-			}else if(obesi<29.9) {
+			}else if(obesi>=25 && obesi < 29.9) {
 				txtObesi.setText("Sobrepeso"); 
 			}else {
 				txtObesi.setText("Obesidad"); 
@@ -246,27 +249,29 @@ public class PacienteHistorial2 extends JDialog {
 
 
 			for (Consulta consulta : misConsultas) {
-				if (consulta.getPaciente().getCedula().equals(paciente.getCedula())) {
-					row[0]=consulta.getFechaConsulta();
-					row[1]=consulta.getDiagnostico();
-					if (consulta.getEnfermedad()!=null)
-					{
-						row[2]=consulta.getEnfermedad().getNombre();
+				if(consulta != null) {
+					if (consulta.getPaciente().getCedula().equals(paciente.getCedula())) {
+						row[0]=consulta.getFechaConsulta();
+						row[1]=consulta.getDiagnostico();
+						if (consulta.getEnfermedad()!=null)
+						{
+							row[2]=consulta.getEnfermedad().getNombre();
 
-					}else
-					{
-						row[2]="-";
-					}
-					if (consulta.getStatus()!=null)
-					{
-						row[3]=consulta.getStatus();
+						}else
+						{
+							row[2]="-";
+						}
+						if (consulta.getStatus()!=null)
+						{
+							row[3]=consulta.getStatus();
 
-					}else
-					{
-						row[3]="-";
+						}else
+						{
+							row[3]="-";
+						}
+						modelo.addRow(row);
+						coincidencia=true;
 					}
-					modelo.addRow(row);
-					coincidencia=true;
 				}
 			}
 

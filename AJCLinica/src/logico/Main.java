@@ -7,6 +7,7 @@ public class Main {
 	    GraphThread t2 = new GraphThread();
 	    t1.start();
 	    t2.start();
+		
 	}
 	
 }

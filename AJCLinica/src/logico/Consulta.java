@@ -14,9 +14,9 @@ public class Consulta implements Serializable {
     private Vacuna vac;
     private String status;
     private int Prioridad;
-	
+    
     public Consulta(String codigoConsulta, String diagnostico, Enfermedad enfermedad,
-			Paciente paciente, Doctor doctor, String status, Vacuna vac) {
+			Paciente paciente, Doctor doctor, String status, Vacuna vac, int prioridad) {
 		super();
 		this.codigoConsulta = codigoConsulta;
 		this.fechaConsulta = new Date();
@@ -26,16 +26,14 @@ public class Consulta implements Serializable {
 		this.doctor = doctor;
 		this.status = status;
 		this.vac = vac;
-		if(vac != null) {
-			Clinica.getInstance().buscarVacunaByNom(vac.getNombre()).removeOne();
-		}
+		this.Prioridad = prioridad;
 	}
     
     public Consulta(String codigoConsulta, String diagnostico, Enfermedad enfermedad,
-			Paciente paciente, Doctor doctor, String status, Vacuna vac, Date fechaConsulta, int prioridad) {
+			Paciente paciente, Doctor doctor, String status, Vacuna vac, Date fecha,int prioridad) {
 		super();
 		this.codigoConsulta = codigoConsulta;
-		this.fechaConsulta = fechaConsulta;
+		this.fechaConsulta = fecha;
 		this.diagnostico = diagnostico;
 		this.enfermedad = enfermedad;
 		this.paciente = paciente;
@@ -43,9 +41,6 @@ public class Consulta implements Serializable {
 		this.status = status;
 		this.vac = vac;
 		this.Prioridad = prioridad;
-		if(vac != null) {
-			Clinica.getInstance().buscarVacunaByNom(vac.getNombre()).removeOne();
-		}
 	}
     
 	public String getCodigoConsulta() {

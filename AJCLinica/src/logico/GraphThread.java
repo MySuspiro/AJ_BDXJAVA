@@ -18,7 +18,7 @@ public class GraphThread extends Thread {
 						}
 					} catch (Exception e) {
 					}					
-					Thread.sleep(2000);
+					Thread.sleep(60000);
 				}
 		} catch (Exception e) {
 			System.out.println("Thread de graficos interrumpida");

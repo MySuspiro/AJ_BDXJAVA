@@ -15,6 +15,7 @@ import javax.swing.border.TitledBorder;
 import com.sun.org.apache.bcel.internal.generic.LoadClass;
 import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
 
+import javafx.scene.layout.Priority;
 import logico.Clinica;
 import logico.Consulta;
 import logico.Doctor;
@@ -23,6 +24,7 @@ import logico.Historial;
 import logico.Paciente;
 import logico.Persona;
 import logico.Vacuna;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -485,7 +487,7 @@ public class RegConsulta extends JDialog {
 		paciente.setAltura((int)spnAlt.getValue());
 		paciente.setPeso((int)spnPes.getValue());
 		paciente.setTipoSangre(cmbSangre.getSelectedItem().toString());
-		Clinica.getInstance().modificarPersona(paciente);
+		//JavaConnect2SQL.getInstace().updatePaciente(paciente);(paciente);
 	}
 
 
@@ -507,22 +509,22 @@ public class RegConsulta extends JDialog {
 			if (enfermedad != null) {
 				if (rdbEnf.isSelected()) {
 					status = "Enfermo";
-					paciente.getHist().addMisEnfermedades(enfermedad);
+					JavaConnect2SQL.getInstace().agregarEnfPaciente(paciente, enfermedad);
 				} else if (rdbSano.isSelected()) {
 					status = "Sano";
-					paciente.getHist().eliminarMisEnfermedades(enfermedad);
+					JavaConnect2SQL.getInstace().deleteEnfPaciente(paciente, enfermedad);
 				}
 			}
 
-			Consulta consulta = new Consulta(txtCodigoCons.getText(), txtDiag.getText(), enfermedad, paciente,miDoc, status, vacuna);
-
+			//Consulta consulta = new Consulta(txtCodigoCons.getText(), txtDiag.getText(), enfermedad, paciente,miDoc, status, vacuna);
+			int prioridad = 0;
 			int option = JOptionPane.showConfirmDialog(null, "Desea agregar la consulta al historial del paciente?", "Confirmación", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
-				paciente.getHist().addMisConsultas(consulta);
+				prioridad = 1;
 			}
 
 			updatePatient(paciente);
-			Clinica.getInstance().agregarConsulta(consulta);
+			//Clinica.getInstance().agregarConsulta(consulta);
 
 			JOptionPane.showMessageDialog(null, "Consulta Registrada Exitosamente", "Consulta", JOptionPane.INFORMATION_MESSAGE);
 

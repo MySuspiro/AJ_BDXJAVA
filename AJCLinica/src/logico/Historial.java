@@ -3,48 +3,65 @@ package logico;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import net.code.java.sql.JavaConnect2SQL;
+
 
 public class Historial implements Serializable {
 
 	private String codigo;
 	private String cedPaciente;
+	private Paciente pac;
 	private ArrayList<Vacuna> misVacunas;
 	private ArrayList<Consulta> misConsultas;
 	private ArrayList<Enfermedad> misEnfermedades;
 	
 	public Historial(String cedPaciente) {
 		super();
-		this.codigo = "H-" + Clinica.getInstance().getcodHist();
 		this.cedPaciente = cedPaciente;
-		misVacunas = new ArrayList<Vacuna>();
-		misConsultas = new ArrayList<Consulta>();
-		misEnfermedades = new ArrayList<Enfermedad>();
+		misVacunas = new ArrayList<>();
+		misConsultas = new ArrayList<>();
+		misEnfermedades = new ArrayList<>();
 	}
+	
 
 	public String getCodigo() {
 		return codigo;
 	}
+	
+	public Paciente getPaciente() {
+		pac = JavaConnect2SQL.getInstace().buscarPacienteByCedula(cedPaciente);
+		return pac;
+	}
 
 	public ArrayList<Vacuna> getMisVacunas() {
+		ArrayList<String> misCodes = JavaConnect2SQL.getInstace().getMisPaciente_Vacuna(getPaciente());
+		Vacuna vac = null;
+		misVacunas.clear();
+		for (String aux : misCodes) {
+			vac = JavaConnect2SQL.getInstace().buscarVacunaByCod(aux);
+			if(vac != null) {
+				misVacunas.add(vac);
+			}
+		}
 		return misVacunas;
 	}
 
-	public void addMisVacunas(Vacuna vac) {
-		this.misVacunas.add(vac);
-	}
-	
-	public void removeMisVacunas(Vacuna vac) {
-		this.misVacunas.remove(vac);
-	}
 	
 
 	public ArrayList<Consulta> getMisConsultas() {
+		ArrayList<String> misCodes = JavaConnect2SQL.getInstace().getMisPaciente_Consulta(getPaciente());
+		Consulta consulta = null;
+		misConsultas.clear();
+		for (String aux : misCodes) {
+			consulta = JavaConnect2SQL.getInstace().buscarConsultaXCod(aux);
+			if(consulta!=null) {
+				misConsultas.add(consulta);
+			}
+		}
+
 		return misConsultas;
 	}
 
-	public void addMisConsultas(Consulta con) {
-		this.misConsultas.add(con);
-	}
 	
 
 	public String getCedPaciente() {
@@ -52,21 +69,16 @@ public class Historial implements Serializable {
 	}
 
 	public ArrayList<Enfermedad> getMisEnfermedades() {
+		ArrayList<String> misCodes = JavaConnect2SQL.getInstace().getMisEnfermedad_Condicion_Paciente(getPaciente());
+		Enfermedad enf = null;
+		misEnfermedades.clear();
+		for (String aux : misCodes) {
+			enf = JavaConnect2SQL.getInstace().buscarEnfermedadByCode(aux);
+			if(enf != null) {
+				misEnfermedades.add(enf);
+			}
+		}
 		return misEnfermedades;
 	}
-	
-	public void addMisEnfermedades(Enfermedad aux) {
-		this.misEnfermedades.add(aux);
-	}
-	
-	public void eliminarMisEnfermedades(Enfermedad aux) {
-		this.misEnfermedades.remove(aux);
-	}
-	
-	
-	
-	
-	
-	
 	
 }

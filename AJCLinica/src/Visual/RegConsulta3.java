@@ -506,22 +506,22 @@ public class RegConsulta3 extends JDialog {
 			if (enfermedad != null) {
 				if (rdbEnf.isSelected()) {
 					status = "Enfermo";
-					paciente.getHist().addMisEnfermedades(enfermedad);
+			//		paciente.getHist().addMisEnfermedades(enfermedad);
 				} else if (rdbSano.isSelected()) {
 					status = "Sano";
-					paciente.getHist().eliminarMisEnfermedades(enfermedad);
+			//		paciente.getHist().eliminarMisEnfermedades(enfermedad);
 				}
 			}
 
-			Consulta consulta = new Consulta(txtCodigoCons.getText(), txtDiag.getText(), enfermedad, paciente,miDoc, status, vacuna);
+			//Consulta consulta = new Consulta(txtCodigoCons.getText(), txtDiag.getText(), enfermedad, paciente,miDoc, status, vacuna);
 
 			int option = JOptionPane.showConfirmDialog(null, "Desea agregar la consulta al historial del paciente?", "Confirmaci�n", JOptionPane.OK_CANCEL_OPTION);
 			if (option == JOptionPane.OK_OPTION) {
-				paciente.getHist().addMisConsultas(consulta);
+			//	paciente.getHist().addMisConsultas(consulta);
 			}
 
 			updatePatient(paciente);
-			JavaConnect2SQL.getInstace().agregarConsulta(consulta);
+			//JavaConnect2SQL.getInstace().agregarConsulta(consulta);
 			
 			JOptionPane.showMessageDialog(null, "Consulta Registrada Exitosamente", "Consulta", JOptionPane.INFORMATION_MESSAGE);
 

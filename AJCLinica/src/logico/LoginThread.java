@@ -18,7 +18,7 @@ public class LoginThread extends Thread{
 	@Override
 	public void run() {
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+			public void run() {/*
 				FileInputStream empresa;
 				FileOutputStream empresa2;
 				ObjectInputStream empresaRead;
@@ -51,7 +51,7 @@ public class LoginThread extends Thread{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				*/
 				try {
 					Login frame = new Login();
 					frame.setVisible(true);

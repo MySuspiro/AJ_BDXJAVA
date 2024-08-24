@@ -141,7 +141,7 @@ public class RegCita3 extends JDialog {
 			                }
 			                
 			                //
-			            Doctor miDoc= JavaConnect2SQL.getInstace().buscarDoctorByNom(txtDoc.getText());
+			            Doctor miDoc = JavaConnect2SQL.getInstace().buscarDoctorByNom(txtDoc.getText());
 
 						//System.out.println("toy aqui1" );
 						if(selected !=null && miCita == null && doctorTieneCita(selected,fech,cbxHora.getSelectedItem().toString(), miCita)==false ) {

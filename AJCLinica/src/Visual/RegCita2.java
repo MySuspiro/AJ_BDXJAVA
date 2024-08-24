@@ -163,8 +163,8 @@ public class RegCita2 extends JDialog {
 			lblNewLabel.setBounds(31, 21, 56, 16);
 			panel.add(lblNewLabel);
 			
-			JLabel lblNewLabel_5 = new JLabel("Cedula del Paciente");
-			lblNewLabel_5.setBounds(16, 138, 116, 16);
+			JLabel lblNewLabel_5 = new JLabel("Cedula del Paciente:");
+			lblNewLabel_5.setBounds(16, 138, 128, 16);
 			panel.add(lblNewLabel_5);
 			
 			txtCedPaciente = new JTextField();

@@ -436,7 +436,7 @@ public class Clinica implements Serializable{
 	public int cantMujeres() {
 		int count=0;
 		
-		for (Persona persona: misPersonas)
+		for (Persona persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona.getSexo()=='F'&& persona instanceof Paciente)
 			{
@@ -449,7 +449,7 @@ public class Clinica implements Serializable{
 	public int cantHombres() {
 		int count=0;
 		
-		for (Persona persona: misPersonas)
+		for (Persona persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona.getSexo()=='M' && persona instanceof Paciente)
 			{
@@ -461,22 +461,7 @@ public class Clinica implements Serializable{
 	
 	public int vacunaCantPacientes(Vacuna vacuna) {
 		int count = 0;
-		for (Paciente persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
-		{
-			if (persona instanceof Paciente )
-			{
-				try {//fix
-					for (Vacuna vac: ((Paciente) persona).getHist().getMisVacunas())
-					{
-						if(vac.getCodigo().equalsIgnoreCase(vacuna.getCodigo()))
-						{
-							count++;
-						}
-					}
-				} catch (Exception e) {
-				}
-							}
-		}
+		count = JavaConnect2SQL.getInstace().getCantPacxVac(vacuna);
 		return count;
 	}
 	
@@ -486,13 +471,10 @@ public class Clinica implements Serializable{
 		{
 			if (persona instanceof Paciente )
 			{
-				try {//fix
-					for (Enfermedad enfermedad: ((Paciente)persona).getHist().getMisEnfermedades())
+				try {
+					for (String enfermedad: JavaConnect2SQL.getInstace().getMisEnfermedad_Condicion_Paciente(persona))
 					{
-						if(enfermedad.getCodigo().equalsIgnoreCase(enf.getCodigo()))
-						{
-							count++;
-						}
+						count++;
 					}
 				} catch (Exception e) {
 				
@@ -503,25 +485,18 @@ public class Clinica implements Serializable{
 	}
 	
 	public int CantPacientes() {
-		int count = 0;
-		for (Paciente persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
-		{
-			if (persona instanceof Paciente )
-			{
-				count++;
-			}
-		}
+		int count = JavaConnect2SQL.getInstace().getMisPacientes("").size();
 		return count;
 	}
 	
 	public int CantPacientesEnfermos() {
 		int count = 0;
-		for (Persona persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
+		for (Paciente persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
 		{
 			if (persona instanceof Paciente )
 			{
-				try {//fix
-					if(!((Paciente)persona).getHist().getMisEnfermedades().isEmpty()) {
+				try {
+					if(JavaConnect2SQL.getInstace().getMisEnfermedad_Condicion_Paciente(persona).isEmpty()) {
 						count++;
 					}
 				} catch (Exception e) {
@@ -534,20 +509,18 @@ public class Clinica implements Serializable{
 	
 	public int CantPacientesEnfermosVig() {
 		int count = 0;
-		for (Persona persona: JavaConnect2SQL.getInstace().getMisPacientes(""))
+		for (Enfermedad enf: JavaConnect2SQL.getInstace().getMisEnfermedades("where Estado = 1"))
 		{
-			if (persona instanceof Paciente )
-			{
-				try {//fix
-					for (Enfermedad enf : ((Paciente)persona).getHist().getMisEnfermedades()) {
-						if(enf.getStatus().equalsIgnoreCase("Vigilancia")) {
-							count++;
-						}
-					}
-				} catch (Exception e) {
-				
-				}
-			}
+			count += JavaConnect2SQL.getInstace().getCantPacxEnfVig(enf);
+		}
+		return count;
+	}
+	
+	public int CantPacientesEnfermosNOVig() {
+		int count = 0;
+		for (Enfermedad enf: JavaConnect2SQL.getInstace().getMisEnfermedades("where Estado = 0"))
+		{
+			count += JavaConnect2SQL.getInstace().getCantPacxEnfVig(enf);
 		}
 		return count;
 	}

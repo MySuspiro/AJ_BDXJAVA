@@ -20,6 +20,7 @@ import logico.CitaMedica;
 import logico.Clinica;
 import logico.Doctor;
 import logico.Persona;
+import net.code.java.sql.JavaConnect2SQL;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -145,7 +146,7 @@ public class RegCita extends JDialog {
 		                	    && !txtCedPaciente.getText().isEmpty() 
 		                	) {
 							CitaMedica cita = new CitaMedica(txtCod.getText(), txtCedPaciente.getText(), txtNomPaciente.getText(), doc, cbxHora.getSelectedItem().toString(), fech);
-							Clinica.getInstance().agregarCita(cita);
+							JavaConnect2SQL.getInstace().agregarCita(cita);
 							
 							JOptionPane.showMessageDialog(null, "Cita Agendada Exitosamente", "Agenda", JOptionPane.INFORMATION_MESSAGE);
 							Clean();
@@ -168,7 +169,7 @@ public class RegCita extends JDialog {
 							
 							
 
-							Clinica.getInstance().modificarCita(miCita);
+							JavaConnect2SQL.getInstace().updateCita(miCita);
 							JOptionPane.showMessageDialog(null, "Cita Modificada Exitosamente", "Agenda", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 							ListarCita.loadCitas();
@@ -215,7 +216,7 @@ public class RegCita extends JDialog {
 			lblNewLabel.setBounds(31, 21, 56, 16);
 			panel.add(lblNewLabel);
 			
-			JLabel lblNewLabel_5 = new JLabel("Tel\u00E9fono Persona:");
+			JLabel lblNewLabel_5 = new JLabel("Cedula Persona:");
 			lblNewLabel_5.setBounds(16, 138, 116, 16);
 			panel.add(lblNewLabel_5);
 			
@@ -342,7 +343,7 @@ public class RegCita extends JDialog {
 	    Calendar calendarFecha = Calendar.getInstance();
 	    calendarFecha.setTime(fecha);
 
-	    for (CitaMedica cita : Clinica.getInstance().getMisCitas()) {
+	    for (CitaMedica cita : JavaConnect2SQL.getInstace().getMisCitas("")) {
 	        // Excluir la cita que se está modificando de la comparación
 	        if (cita != citaModificar && cita.getDoctor().equals(doctor)) {
 	            Date citaFecha = cita.getFecha();
