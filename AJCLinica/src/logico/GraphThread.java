@@ -17,7 +17,7 @@ public class GraphThread extends Thread {
 							Principal.UpdateGraphs();
 						}
 					} catch (Exception e) {
-					}					
+					}						
 					Thread.sleep(60000);
 				}
 		} catch (Exception e) {
