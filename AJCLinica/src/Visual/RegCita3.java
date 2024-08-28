@@ -219,7 +219,7 @@ public class RegCita3 extends JDialog {
 			lblNewLabel.setBounds(31, 21, 56, 16);
 			panel.add(lblNewLabel);
 			
-			JLabel lblNewLabel_5 = new JLabel("Tel\u00E9fono Persona:");
+			JLabel lblNewLabel_5 = new JLabel("Cedula Persona:");
 			lblNewLabel_5.setBounds(16, 138, 116, 16);
 			panel.add(lblNewLabel_5);
 			

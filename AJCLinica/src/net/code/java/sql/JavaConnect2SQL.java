@@ -182,7 +182,7 @@ public class JavaConnect2SQL {
 		User aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<User> MisUsers = getMisUsers("");
+		ArrayList<User> MisUsers = getMisUsers("Where UserName = '" + codigo + "'");
 		while (!encontrado && i < MisUsers.size()) {
 			User user = MisUsers.get(i);
 			if (user.getUserName().equals(codigo)) {
@@ -199,7 +199,7 @@ public class JavaConnect2SQL {
 		CitaMedica aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<CitaMedica> misCitas = getMisCitas("");
+		ArrayList<CitaMedica> misCitas = getMisCitas("Where Codigo = '" + Code + "'");
 		while (!encontrado && i < misCitas.size()) {
 			if (misCitas.get(i).getCodigo().equalsIgnoreCase(Code)) {
 				aux = misCitas.get(i);
@@ -356,6 +356,7 @@ public class JavaConnect2SQL {
 
 			while (rs.next()) {
 				cant = rs.getInt("Cant");
+				System.out.println(cant);
 			}
 
 			rs.close();
@@ -548,7 +549,7 @@ public class JavaConnect2SQL {
 		Enfermedad aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Enfermedad> misEnfermedades = getMisEnfermedades("");
+		ArrayList<Enfermedad> misEnfermedades = getMisEnfermedades("Where Codigo = '" + Code + "'");
 		while (!encontrado && i < misEnfermedades.size()) {
 			if (misEnfermedades.get(i).getCodigo().equalsIgnoreCase(Code)) {
 				aux = misEnfermedades.get(i);
@@ -563,7 +564,7 @@ public class JavaConnect2SQL {
 		Enfermedad aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Enfermedad> misEnfermedades = getMisEnfermedades("");
+		ArrayList<Enfermedad> misEnfermedades = getMisEnfermedades("Where Nombre = '" + nom + "'");
 		while (!encontrado && i < misEnfermedades.size()) {
 			if (misEnfermedades.get(i).getNombre().equalsIgnoreCase(nom)) {
 				aux = misEnfermedades.get(i);
@@ -578,7 +579,7 @@ public class JavaConnect2SQL {
 		Doctor aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Doctor> misPersonas = getMisDoctor("");
+		ArrayList<Doctor> misPersonas = getMisDoctor("Where Codigo = '" + codigoPersona + "'");
 		while (!encontrado && i < misPersonas.size()) {
 			if (misPersonas.get(i).getCodigo().equalsIgnoreCase(codigoPersona)) {
 				aux = misPersonas.get(i);
@@ -594,7 +595,7 @@ public class JavaConnect2SQL {
 		Empleado aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Empleado> misPersonas = getMisEmpleado("");
+		ArrayList<Empleado> misPersonas = getMisEmpleado("Where Codigo = '" + codigoPersona + "'");
 		while (!encontrado && i < misPersonas.size()) {
 			if (misPersonas.get(i).getCodigo().equalsIgnoreCase(codigoPersona)) {
 				aux = misPersonas.get(i);
@@ -610,7 +611,7 @@ public class JavaConnect2SQL {
 		Paciente aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Paciente> misPersonas = getMisPacientes("");
+		ArrayList<Paciente> misPersonas = getMisPacientes("Where Codigo = '" + codigoPersona + "'");
 		while (!encontrado && i < misPersonas.size()) {
 			if (misPersonas.get(i).getCodigo().equalsIgnoreCase(codigoPersona)) {
 				aux = misPersonas.get(i);
@@ -626,7 +627,7 @@ public class JavaConnect2SQL {
 		Paciente aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Paciente> misPersonas = getMisPacientes("");
+		ArrayList<Paciente> misPersonas = getMisPacientes("Where Cedula = '" + cedula + "'");
 		if (!misPersonas.isEmpty()) {
 			while (!encontrado && i < misPersonas.size()) {
 				if (misPersonas.get(i).getCedula().equalsIgnoreCase(cedula)) {
@@ -667,7 +668,7 @@ public class JavaConnect2SQL {
 
 	public ArrayList<Paciente> getMisPacientes(String Condition) {
 		ArrayList<Paciente> misPacs = new ArrayList<>();
-		String query = "Select Codigo, Cedula, Nombre, Telefono, Direccion, Sexo, CorreoElectronico, seguro, peso, altura, tipoSangre From Paciente"
+		String query = "Select Codigo, Cedula, Nombre, Telefono, Direccion, Sexo, CorreoElectronico, seguro, peso, altura, tipoSangre From Paciente "
 				+ Condition;
 
 		try {
@@ -705,7 +706,7 @@ public class JavaConnect2SQL {
 		Vacuna aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Vacuna> misVacunas = getMisVacunas("");
+		ArrayList<Vacuna> misVacunas = getMisVacunas("Where Codigo = '" + cod + "'");
 		while (!encontrado && i < misVacunas.size()) {
 			if (misVacunas.get(i).getCodigo().equalsIgnoreCase(cod)) {
 				aux = misVacunas.get(i);
@@ -720,7 +721,7 @@ public class JavaConnect2SQL {
 		Vacuna aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Vacuna> misVacunas = getMisVacunas("");
+		ArrayList<Vacuna> misVacunas = getMisVacunas("Where Nombre = '" + nom + "'");
 		while (!encontrado && i < misVacunas.size()) {
 			if (misVacunas.get(i).getNombre().equalsIgnoreCase(nom)) {
 				aux = misVacunas.get(i);
@@ -885,7 +886,7 @@ public class JavaConnect2SQL {
 	}
 
 	public void agregarUser(User user) {
-		String query = "INSERT INTO usuario Set (UserName, Contrasena, Tipo)" + " VALUES (?,?,?)";
+		String query = "INSERT INTO usuario (UserName, Contrasena, Tipo)" + " VALUES (?,?,?)";
 
 		try (PreparedStatement ps = cn.prepareStatement(query)) {
 			ps.setString(1, user.getUserName());
@@ -947,7 +948,7 @@ public class JavaConnect2SQL {
 		Doctor aux = null;
 		boolean encontrado = false;
 		int i = 0;
-		ArrayList<Doctor> misPersonas = getMisDoctor("");
+		ArrayList<Doctor> misPersonas = getMisDoctor("Where Nombre = '" + nom + "'");
 		while (!encontrado && i < misPersonas.size()) {
 			if (misPersonas.get(i).getNombre().equalsIgnoreCase(nom)) {
 				aux = misPersonas.get(i);
@@ -1088,6 +1089,7 @@ public class JavaConnect2SQL {
 			System.out.println("Error al insertar el registro.");
 			e.printStackTrace();
 		}
+		UsuarioCreoCita(cita);
 	}
 
 	public void updateCita(CitaMedica cita) {
@@ -1396,6 +1398,27 @@ public class JavaConnect2SQL {
 		}
 	}
 
+	
+	public void UsuarioCreoCita(CitaMedica cita) {
+		String query = "insert into Auditoria_Usuario_CitaMedica (UserName, CodigoCitaMedica) Values (?,?)";
+		try (PreparedStatement ps = cn.prepareStatement(query)) {
+
+			ps.setString(1, Clinica.getLoginUser().getUserName());
+			ps.setString(2, cita.getCodigo());
+
+			int rowsAffected = ps.executeUpdate();
+
+			if (rowsAffected > 0) {
+			} else {
+				System.out.println("Usuario no entro");
+			}
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println("Error al insertar el registro.");
+			e.printStackTrace();
+		}
+	}
+	
 	public static void updateSintoma(Sintoma sint) {
 		String query = "Update Sintoma Set Nombre = ?" + " WHERE Codigo = ?";
 

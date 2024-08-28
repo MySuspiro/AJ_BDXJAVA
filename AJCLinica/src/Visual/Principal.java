@@ -528,7 +528,7 @@ public class Principal extends JFrame {
 	    for (String aux : JavaConnect2SQL.getInstace().getTop5PacxVac()) {
 	    	if(aux != null) {
 		    	Vacuna vacuna = JavaConnect2SQL.getInstace().buscarVacunaByCod(aux);
-		    	datasetVac.setValue(JavaConnect2SQL.getInstace().getCantPacxVac(vacuna), "", vacuna.getNombre());
+		    	datasetVac.setValue(JavaConnect2SQL.getInstace().getCantPacxVac(vacuna), vacuna.getEnf().getNombre(), vacuna.getNombre());
 	    	}
 	    }
 
@@ -553,7 +553,9 @@ public class Principal extends JFrame {
 		// Fuente de Datos
 		datasetEnfV = new DefaultCategoryDataset();
 		for (Enfermedad aux : JavaConnect2SQL.getInstace().getMisEnfermedades("where Estado = 1")) {
-			datasetEnfV.setValue(JavaConnect2SQL.getInstace().getCantPacxEnfVig(aux), "", aux.getNombre());
+			if(aux != null) {
+				datasetEnfV.setValue(JavaConnect2SQL.getInstace().getCantPacxEnfVig(aux), "", aux.getNombre());
+			}
 		}
 
 		// Creando el Grafico
@@ -608,35 +610,38 @@ public class Principal extends JFrame {
 	
 	
 
-	// Método para actualizar el gráfico con nuevos datos
 	public static void UpdateGraphs() {
+		//Actualizar datos del gráfico izq abajo
 		datasetVac.clear();
-
+		
 		datasetVac = new DefaultCategoryDataset();
 		for (String aux : JavaConnect2SQL.getInstace().getTop5PacxVac()) {
-	    	Vacuna vacuna = JavaConnect2SQL.getInstace().buscarVacunaByCod(aux);
-	    	datasetVac.setValue((int)Clinica.getInstance().vacunaCantPacientes(vacuna), vacuna.getEnf().getNombre(), vacuna.getNombre());
+	    	if(aux != null) {
+		    	Vacuna vacuna = JavaConnect2SQL.getInstace().buscarVacunaByCod(aux);
+		    	datasetVac.setValue(JavaConnect2SQL.getInstace().getCantPacxVac(vacuna), vacuna.getEnf().getNombre(), vacuna.getNombre());
+	    	}
 	    }
-		// Actualizar datos del gráfico
 		chartVac.getCategoryPlot().setDataset(datasetVac);
 		
+		// Actualizar datos del gráfico izq arriba
 		datasetEnfV.clear();
 		for (Enfermedad aux : JavaConnect2SQL.getInstace().getMisEnfermedades("where Estado = 1")) {
-			datasetEnfV.setValue(JavaConnect2SQL.getInstace().getCantPacxEnfVig(aux), "", aux.getNombre());
+			if(aux != null) {
+				datasetEnfV.setValue(JavaConnect2SQL.getInstace().getCantPacxEnfVig(aux), "", aux.getNombre());
+			}
 		}
-		// Actualizar datos del gráfico
 		chartEnfV.getCategoryPlot().setDataset(datasetEnfV);
 		
+		// Actualizar datos del gráfico der arriba
 		datasetEnf.clear();
 		int CantVig = Clinica.getInstance().CantPacientesEnfermosVig();
 		int CantEnf = Clinica.getInstance().CantPacientesEnfermos();
 		datasetEnf.setValue("Pacientes Enfermos", CantEnf-CantVig);
 		datasetEnf.setValue("Enfermos en Vigilancia", CantVig);
 		datasetEnf.setValue("Pacientes Sanos", Clinica.getInstance().CantPacientes()-CantEnf);
-		// Actualizar datos del gráfico
 		chartEnfPanel.repaint();
 		
-		// Actualizar datos del gráfico
+		// Actualizar datos del gráfico der abajo
 		datasetDoc.clear();
 		for (Doctor aux : JavaConnect2SQL.getInstace().getMisDoctor("")) {
 			if(aux instanceof Doctor) {

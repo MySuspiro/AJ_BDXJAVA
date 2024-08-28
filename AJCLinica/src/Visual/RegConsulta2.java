@@ -330,7 +330,7 @@ public class RegConsulta2 extends JDialog {
 		panel_2.add(txtCodigoCons);
 		txtCodigoCons.setText("C-" + Clinica.getInstance().getcodCons());
 
-		JLabel lblNewLabel_9 = new JLabel("Diagnostico:");
+		JLabel lblNewLabel_9 = new JLabel("Descripcion:");
 		lblNewLabel_9.setBounds(43, 264, 120, 16);
 		panel_2.add(lblNewLabel_9);
 
